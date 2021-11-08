@@ -122,4 +122,46 @@ def game_screen():
 
 Com os atributos da função `question_and_answer` sendo a _questão n_, _resposta x de 4_ e _se tal resposta está certa ou errrada (True or False)_, as listas "q _n_" ditas anteriormente podem ser usadas para se identificar uma alternativa aleatória e se esta está certa ou não. `q[x][0]` é a resposta e `q[x][1]` é se ela era verdadeira ou falsa. A função `game_screen()` é somente essas condicionais até a última questão. Não tem outro segredo.
 
-Ao clicar na resposta da pergunta, independente de estar certa ou não, você será levado para a tela de resultados, de função `result()`. 
+Ao clicar na resposta da pergunta, independente de estar certa ou não, você será levado para a tela de resultados, de função `result()`. Ela é responsável pelos botões e a distribuição de pontos e menções.
+
+Os pontos, primeiramente, são uma variável chamada `points` que começa em 1. O que a função results faz com esses pontos é criar condições para atualizar o placar. Olhe um trecho:
+~~~python
+# Scoreboard
+    if points >= 1:
+        pyxel.blt(176 - 16, 56, 1, 0, 120, 16, 8)
+    if points >= 2:
+        pyxel.blt(176 - 32, 56, 1, 0, 120, 16, 8)
+    if points >= 3:
+        pyxel.blt(176 - 48, 56, 1, 0, 112, 16, 8)
+~~~
+Caso seus pontos forem 2, o placar vai dizer que você tem uma menção, mostrando a menção MM em verde. Se você acertar mais uma pergunta e seus pontos subirem para 3, não só a menção MS também vai ficar verde, como a MM em verde não vai desaparecer. Observação: pyxel.blt() serve para acrescentar imagens e é uma função própria do pyxel.
+
+Já em relação aos botões, a função `result()` só possui botões que fazem mais do que só trocar de telas. O botão "Continuar" faz com que você volte para a tela de jogo e soma um ponto para o jogador, fazendo com que ele avance para a próxima pergunta, além de só aparecer caso a resposta clicada tenha sido a verdadeira. O botão "Reiniciar" também volta para a tela do jogo, mas ao invés de somar um ponto ao seu total de pontos, ele reverte seus total de pontos de volta a 1, fazendo com que você volte a questão 1 e suas menções também. Por fim, o botão "Menu# também reinicia seus pontos, mas faz com que você volte para a tela de Menu ao invés da de jogo.
+
+~~~python
+#Parte do botão Continuar
+if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+                points += 1
+                chr_bodies_check()
+                in_results = False
+                game_screen()
+~~~
+
+~~~python
+#Parte do botão Reinicar
+if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+            points = 1
+            chr_bodies_check()
+            in_results = False
+            shuffle(q1), shuffle(q2), shuffle(q3), shuffle(q4), shuffle(q5)
+            game_screen()
+~~~
+
+~~~python
+#Parte do botão Menu
+if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+            points = 1
+            tm_x, tm_y, tile_num = 0, 32, 1
+            in_results = False
+            menu_screen()
+~~~
