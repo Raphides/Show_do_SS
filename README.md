@@ -165,3 +165,83 @@ if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
             in_results = False
             menu_screen()
 ~~~
+Além disso, caso os pontos forem iguais a 10, você vece o jogo. isso também está especificado na tela de resultados.
+
+Por fim, no Menu, há um botão no canto superior direito que leva o usuário para a tela de seleção de personagem, definida pela `função selection_screen()`. Nessa tela, há vários botões com ícones de jogares que, no código, foram chamadas de `chr_box()`, através de uma função. Esses botões são auxiliados por uma série de variáveis que se referem aos personagens do jogo e se você está os usando ou não. Tudo que esses botões fazem é mudar os valores dessas variáveis para True or False. A mágica dessa tela de seleção está mesmo é na implementação dessas variáveis. Veja isso nas próximas 6 demonstrações de código:
+
+~~~python
+def chr_box(x_position, y_image, bm_select, wm_select, bg_select, wg_select):
+    global black_male, white_male, black_girl, white_girl
+    if x_position <= pyxel.mouse_x < x_position + 16 and 52 <= pyxel.mouse_y < 68:
+        pyxel.blt(x_position, 52, 1, 16, y_image, 16, 16)
+        if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+            black_male, white_male, black_girl, white_girl = bm_select, wm_select, bg_select, wg_select
+    else:
+        pyxel.blt(x_position, 52, 1, 16, y_image, 16, 16, pyxel.COLOR_YELLOW)
+~~~
+A `chr_box` usa seus atributo bm_select, wm_select, bg_select e wg_select para dizer que vai variar os valores das variáveis quando forem chamar a função.
+
+~~~python
+def selection_screen():
+    global tm_x, tm_y, in_selection, tile_num
+    in_selection = True
+    pyxel.text(50, 10, "Escolha seu sofredor(a)", pyxel.COLOR_WHITE)
+    chr_box(22, 160, False, True, False, False)
+    chr_box(66, 176, True, False, False, False)
+    chr_box(110, 192, False, False, False, True)
+    chr_box(158, 208, False, False, True, False)
+    if white_male:
+        choosen_chr(12)
+    elif black_male:
+        choosen_chr(56)
+    elif white_girl:
+        choosen_chr(100)
+    elif black_girl:
+        choosen_chr(148)
+~~~
+Aí a tela de implementa a função do botão de personagem para criar 4 botõess que mudam as variáveis.
+~~~python
+def chr_bodies_check():
+    global tm_x, tm_y, tile_num
+    tm_x = 5
+    tile_num = 0
+    if white_male:
+        tm_y = 80
+    if black_male:
+        tm_y = 48
+    if white_girl:
+        tm_y = 32
+    if black_girl:
+        tm_y = 64
+~~~
+As variáveis são então usadas para mudarem o tilemap caso forem verdadeiras e por fim, são implementadas nos botões e telas do resto do jogo. Observe:
+~~~python
+# Botão start do menu. Veja o ch_bodeis_check() nas consequências ao pressionar o botão.
+if 75 < pyxel.mouse_x < 140 and 30 < pyxel.mouse_y < 44:
+        pyxel.blt(75, 30, 1, 0, 33, 64, 14, 0)
+        if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+            in_menu = False
+            chr_bodies_check()
+            game_screen()
+    else:
+        pyxel.blt(75, 30, 1, 0, 17, 64, 14, 0)
+    pyxel.text(95, 34, "Start", pyxel.COLOR_BLACK)
+~~~
+~~~python
+# Botão continuar da tela de resultados.
+# Veja o ch_bodeis_check() nas consequências ao pressionar o botão novamente.
+        if 125 < pyxel.mouse_x < 190 and 70 < pyxel.mouse_y < 84:
+            pyxel.blt(125, 70, 1, 0, 33, 64, 14, 0)
+            if pyxel.btn(pyxel.MOUSE_LEFT_BUTTON):
+                points += 1
+                chr_bodies_check()
+                in_results = False
+                game_screen()
+        else:
+            pyxel.blt(125, 70, 1, 0, 17, 64, 14, 0)
+        pyxel.text(142, 75, "Continue", pyxel.COLOR_BLACK)
+~~~
+
+----------------------------------------------------------------------------------------------------
+
+É basicamente isso o jogo. Existem mais botõese funções, mas nada surpreendente ou que saia dos padrões. Esse jogo foi feio com muito esforço por Raphael Mendes e Ana Beatriz Norbertoe e ele não seria nada sem a participação de ambos. Qualquer dúvida, estamos a disposição (caso vermos a mensagem...)
