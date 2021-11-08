@@ -97,4 +97,29 @@ ef question_and_answer(question, a1, a1_correct, a2, a2_correct, a3, a3_correct,
     answers_animation(62, 90, a4, a4_correct)
 ~~~
 
-Uma função utiliza-se da outra para fazerem um trabalho repetitivo que poderia gastar muitas mais linhas de código. A função `answers_animation()` usa do código 
+Uma função utiliza-se da outra para fazerem um trabalho repetitivo ao desenvolvedo que poderia gastar muitas mais linhas de código. A função `answers_animation()` usa do código padrão dos botões, usando atributos nas partes que variam. Como esses botões de resposta executam todos a exata mesma ação, acabou sendo muito mais fácil a realização uma função que englobasse-as como um todo. Dessa forma, a `answers_animation()` desenha e salva os elementos de um dos botões de resposta, enquanto ` question_and_answer` usa da função anterior para fazer os outros 3 botões e padronizá-los numa função, com as pequenas diferenciações entre as perguntas (como a escrita e se a alternativa estava certa ou errada) sendo especificadas em seus atributos.
+
+Auxiliando essas duas funções, foram criadas listas de respostas, armazenadas em variáveis "q _n_", cujo nome define qual questão seus elementos estão se referindo. Por exemplo, para a pergunta 1: _Qual dessas Engenharias não está na FGA?_
+
+~~~python
+q1 = [("Software", False), ("Eletrica", True), ("Aeroes-\npacial", False), ("Automo-\ntiva", False)]
+shuffle(q1)
+~~~
+Na lista q1, cada elemento equivale a uma tupla, que carrega consigo a alternativa escrita por extenso como primeiro elemento e se esta está correta (True) ou errada (False). O shuffle() ali embaixo é uma função pertencente à biblioteca Random, cuja é embaralhar os elementos da lista. Note que o shuffle só embaralha os elementos da lista e não da tupla, logo ("Software", False) podem mular de lugar na lista, mas vão continuar com "Software" na primeira posição da tupla e "False" na segunda. Isso é essencial para entender o código contido na função da tela `game_screen()`. Veja um trecho:
+
+~~~python
+def game_screen():
+    global in_game, points
+    in_game = True
+    if points == 1:
+        question_and_answer("Questao 1 \nQual dessas Engenharias\nnao esta na FGA?",
+                            q1[0][0], q1[0][1], q1[1][0], q1[1][1], q1[2][0], q1[2][1], q1[3][0], q1[3][1])
+    if points == 2:
+        question_and_answer("Questao 2 \nQual dessas nao\ne uma linguagem\nde programacao?", q2[0][0],
+                            q2[0][1], q2[1][0], q2[1][1], q2[2][0],
+                            q2[2][1], q2[3][0], q2[3][1])
+~~~
+
+Com os atributos da função `question_and_answer` sendo a _questão n_, _resposta x de 4_ e _se tal resposta está certa ou errrada (True or False)_, as listas "q _n_" ditas anteriormente podem ser usadas para se identificar uma alternativa aleatória e se esta está certa ou não. `q[x][0]` é a resposta e `q[x][1]` é se ela era verdadeira ou falsa. A função `game_screen()` é somente essas condicionais até a última questão. Não tem outro segredo.
+
+Ao clicar na resposta da pergunta, independente de estar certa ou não, você será levado para a tela de resultados, de função `result()`. 
